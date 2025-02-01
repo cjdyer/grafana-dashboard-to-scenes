@@ -2,6 +2,7 @@ import {readFileSync, writeFileSync} from 'fs';
 import {Dashboard, Panel} from '@grafana/schema';
 import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
+import {generateStatOptions, StatPanelOptions} from './panels/stat';
 
 const imports = `import React from 'react';
 import {
@@ -25,6 +26,14 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
                         code: generateGridItemCode(
                             panel as Panel & {options?: GaugePanelOptions},
                             generateGaugeOptions
+                        ),
+                    };
+                case 'stat':
+                    return {
+                        name: panel.title?.replace(/\s+/g, ''),
+                        code: generateGridItemCode(
+                            panel as Panel & {options?: StatPanelOptions},
+                            generateStatOptions
                         ),
                     };
                 default:

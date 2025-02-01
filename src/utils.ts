@@ -7,6 +7,7 @@ import {
     VizOrientation,
 } from '@grafana/schema';
 import {GaugePanelOptions} from './panels/gauge';
+import {StatPanelOptions} from './panels/stat';
 
 export const generateQuery = (target: Record<string, unknown>) =>
     JSON.stringify(target ?? {}, null, 2);
@@ -98,8 +99,8 @@ export const generateSingleStateOptions = (
 };
 
 export const generateGridItemCode = (
-    panel: Panel & {options?: GaugePanelOptions},
-    optionsGenerator: (options?: GaugePanelOptions) => string
+    panel: Panel & {options?: GaugePanelOptions | StatPanelOptions},
+    optionsGenerator: (options?: GaugePanelOptions | StatPanelOptions) => string
 ) => {
     const {x, y, w, h} = panel.gridPos ?? {x: 0, y: 0, w: 10, h: 5};
 
