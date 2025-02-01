@@ -4,16 +4,7 @@ import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
 import {generateStatOptions, StatPanelOptions} from './panels/stat';
 import {generateTableOptions, TablePanelOptions} from './panels/table';
-
-const imports = `import React from 'react';
-import {
-    EmbeddedScene,
-    PanelBuilders,
-    SceneDataTransformer,
-    SceneGridItem,
-    SceneGridLayout,
-    SceneQueryRunner,
-} from '@grafana/scenes';`;
+import {sceneTemplate} from './sceneTemplate';
 
 const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
@@ -53,25 +44,15 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
         })
         .filter(p => p.name !== undefined);
 
-    const panelsCode = panelMap.map(p => p.code).join('\n\n');
-
-    const sceneCode = `export default function GeneratedDashboard() {
-  const scene = new EmbeddedScene({
-    body: new SceneGridLayout({
-      children: [${panelMap.map(p => p.name).join(', ')}],
-    }),
-  });
-
-  return <scene.Component model={scene} />;
-}`;
-
-    const componentCode = `${imports}\n\n${panelsCode}\n\n${sceneCode}\n`;
+    const componentCode = sceneTemplate
+        .replace('{{PANELS_CODE}}', panelMap.map(p => p.code).join('\n\n'))
+        .replace('{{PANEL_NAMES}}', panelMap.map(p => p.name).join(', '));
 
     writeFileSync(outputTsxPath, componentCode.trim());
     console.log(`Scene file generated: ${outputTsxPath}`);
 };
 
-// Example usage
+// CLI usage
 if (process.argv.length > 2) {
     migrateDashboard(process.argv[2], 'GeneratedScene.tsx');
 }
