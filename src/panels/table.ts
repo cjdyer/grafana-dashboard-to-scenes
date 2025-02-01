@@ -22,7 +22,21 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
             return undefined;
         }
 
-        return JSON.stringify(footer);
+        const footerOptions = [
+            {key: 'countRows', value: footer.countRows},
+            {key: 'enablePagination', value: footer.enablePagination},
+            {key: 'fields', value: footer.fields?.length !== 0 ? footer.fields : undefined},
+            {
+                key: 'reducer',
+                value:
+                    footer.reducer.length !== 0
+                        ? `[${footer.reducer.map(reducer => `'${reducer}'`).join(', ')}]`
+                        : undefined,
+            },
+            {key: 'show', value: footer.show},
+        ].filter(option => option.value !== undefined);
+
+        return `{${footerOptions.map(option => `${option.key}: ${option.value}`).join(',\n')}}`;
     };
 
     const generateSortByOptions = (sortBy?: TableSortByFieldState[]) => {
@@ -30,7 +44,7 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
             return undefined;
         }
 
-        return JSON.stringify(sortBy);
+        return `[${sortBy.map(sort => `{displayName: '${sort.displayName}'${sort.desc !== undefined ? `, desc: ${sort.desc}` : ''}}`)}]`;
     };
 
     const tableOptions: OptionsString<TablePanelOptions>[] = [
@@ -50,6 +64,6 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
 
     return tableOptions
         .filter(option => option.value !== undefined)
-        .map(({key, value}) => `.setOption('${key}', ${JSON.stringify(value)})`)
+        .map(({key, value}) => `.setOption('${key}', ${value})`)
         .join('\n    ');
 };

@@ -81,7 +81,8 @@ export const createEnumLookup = <T extends Record<string, string>>(
 ): Record<T[keyof T], string> => {
     return Object.values(enumType).reduce(
         (lookup, value) => {
-            lookup[value as T[keyof T]] = `${enumName}.${value}`;
+            lookup[value as T[keyof T]] =
+                `${enumName}.${value.charAt(0).toUpperCase() + value.slice(1)}`;
             return lookup;
         },
         {} as Record<T[keyof T], string>
