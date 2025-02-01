@@ -10,6 +10,7 @@ import {
 import {GaugePanelOptions} from './panels/gauge';
 import {StatPanelOptions} from './panels/stat';
 import {TablePanelOptions} from './panels/table';
+import {gridItemTemplate} from './panelTemplate';
 
 export const generateQuery = (target: Record<string, unknown>) =>
     JSON.stringify(target ?? {}, null, 2);
@@ -118,31 +119,40 @@ export const generateGridItemCode = <T = GaugePanelOptions | StatPanelOptions | 
     panel: Panel & {options?: T},
     optionsGenerator: (options?: T) => string
 ) => {
+    if (panel.title === undefined) {
+        throw new Error(`Panel title cannot be undefined. Panel type: ${panel.type}`);
+    }
+
     const {x, y, w, h} = panel.gridPos ?? {x: 0, y: 0, w: 10, h: 5};
 
     const overrides = generateOverrides(panel.fieldConfig?.overrides);
     const queries = panel.targets?.map(generateQuery).join(',\n            ') || '';
     const options = optionsGenerator(panel.options);
 
-    return `const ${panel.title!.replace(/\s+/g, '')} = new SceneGridItem({
-        x: ${x},
-        y: ${y},
-        width: ${w},
-        height: ${h},
-        body: PanelBuilders.${panel.type}()
-        .setTitle('${panel.title}')
-        ${
-            queries.length !== 0
-                ? `.setData(
-        new SceneDataTransformer({
-        $data: new SceneQueryRunner({
-          queries: [${queries}],
-          datasource: { uid: '${panel.datasource!.uid}', type: '${panel.datasource!.type}' }
-        }),
+    const queryData =
+        queries.length !== 0
+            ? `.setData(
+            new SceneDataTransformer({
+                $data: new SceneQueryRunner({
+                    queries: [${queries}],
+                    datasource: { uid: '${
+                        panel.datasource!.uid
+                    }', type: '${panel.datasource!.type}' }
+                }),
                 transformations: ${JSON.stringify(panel.transformations ?? [], null, 2)}
             })
-)\n`
-                : ''
-        }${overrides}${options}.build(),
-        })`;
+        )\n`
+            : '';
+
+    return gridItemTemplate
+        .replace('{{PANEL_NAME}}', panel.title.replace(/\s+/g, ''))
+        .replace('{{X}}', String(x))
+        .replace('{{Y}}', String(y))
+        .replace('{{WIDTH}}', String(w))
+        .replace('{{HEIGHT}}', String(h))
+        .replace('{{PANEL_TYPE}}', panel.type)
+        .replace('{{PANEL_TITLE}}', panel.title)
+        .replace('{{QUERY_SECTION}}', queryData)
+        .replace('{{OVERRIDES}}', overrides)
+        .replace('{{OPTIONS}}', options);
 };
