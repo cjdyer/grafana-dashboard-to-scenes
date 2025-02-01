@@ -1,3 +1,4 @@
+// eslint-disable-next-line n/no-unpublished-import
 import {TableCellHeight, TableFooterOptions, TableSortByFieldState} from '@grafana/schema';
 import {createEnumLookup, OptionsString} from '../utils';
 
@@ -44,7 +45,11 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
             return undefined;
         }
 
-        return `[${sortBy.map(sort => `{displayName: '${sort.displayName}'${sort.desc !== undefined ? `, desc: ${sort.desc}` : ''}}`)}]`;
+        return `[${sortBy.map(
+            sort =>
+                `{displayName: '${sort.displayName}'` +
+                `${sort.desc !== undefined ? `, desc: ${sort.desc}` : ''}}`
+        )}]`;
     };
 
     const tableOptions: OptionsString<TablePanelOptions>[] = [

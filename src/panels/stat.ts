@@ -5,6 +5,7 @@ import {
     BigValueTextMode,
     PercentChangeColorMode,
     SingleStatBaseOptions,
+    // eslint-disable-next-line n/no-unpublished-import
 } from '@grafana/schema';
 import {createEnumLookup, generateSingleStateOptions, OptionsString} from '../utils';
 

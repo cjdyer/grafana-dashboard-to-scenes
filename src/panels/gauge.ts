@@ -1,3 +1,4 @@
+// eslint-disable-next-line n/no-unpublished-import
 import {BarGaugeSizing, SingleStatBaseOptions} from '@grafana/schema';
 import {createEnumLookup, generateSingleStateOptions, OptionsString} from '../utils';
 

@@ -5,6 +5,7 @@ import {
     Panel,
     SingleStatBaseOptions,
     VizOrientation,
+    // eslint-disable-next-line n/no-unpublished-import
 } from '@grafana/schema';
 import {GaugePanelOptions} from './panels/gauge';
 import {StatPanelOptions} from './panels/stat';
@@ -23,7 +24,11 @@ interface Override {
     properties: OverrideProperty[];
 }
 
-export const generateOverrides = (overrides: Override[]) => {
+export const generateOverrides = (overrides?: Override[]) => {
+    if (overrides === undefined) {
+        return '';
+    }
+
     return (
         overrides
             .map(override => generateSingleOverride(override))
@@ -115,7 +120,7 @@ export const generateGridItemCode = <T = GaugePanelOptions | StatPanelOptions | 
 ) => {
     const {x, y, w, h} = panel.gridPos ?? {x: 0, y: 0, w: 10, h: 5};
 
-    const overrides = generateOverrides(panel.fieldConfig!.overrides);
+    const overrides = generateOverrides(panel.fieldConfig?.overrides);
     const queries = panel.targets?.map(generateQuery).join(',\n            ') || '';
     const options = optionsGenerator(panel.options);
 
@@ -126,15 +131,18 @@ export const generateGridItemCode = <T = GaugePanelOptions | StatPanelOptions | 
         height: ${h},
         body: PanelBuilders.${panel.type}()
         .setTitle('${panel.title}')
-        .setData(
+        ${
+            queries.length !== 0
+                ? `.setData(
         new SceneDataTransformer({
         $data: new SceneQueryRunner({
           queries: [${queries}],
-          datasource: { uid: '${panel.datasource?.uid}', type: '${panel.datasource?.type}' }
+          datasource: { uid: '${panel.datasource!.uid}', type: '${panel.datasource!.type}' }
         }),
-        transformations: ${JSON.stringify(panel.transformations ?? [], null, 2)}
-        })
-        )
-        ${overrides}${options}.build(),
+                transformations: ${JSON.stringify(panel.transformations ?? [], null, 2)}
+            })
+)\n`
+                : ''
+        }${overrides}${options}.build(),
         })`;
 };

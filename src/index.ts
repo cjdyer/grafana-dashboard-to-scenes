@@ -1,4 +1,5 @@
 import {readFileSync, writeFileSync} from 'fs';
+// eslint-disable-next-line n/no-unpublished-import
 import {Dashboard, Panel} from '@grafana/schema';
 import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
