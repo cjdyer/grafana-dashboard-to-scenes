@@ -1,0 +1,6 @@
+{
+    "panels": [
+        {"id": 1, "title": "CPU Usage"},
+        {"id": 2, "title": "Memory Usage"}
+    ]
+}

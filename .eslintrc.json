@@ -1,0 +1,7 @@
+{
+    "extends": "./node_modules/@widesky/wsts/",
+    "rules": {
+        "indent": "off",
+        "@stylistic/indent": "off"
+    }
+}
