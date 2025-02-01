@@ -1,6 +1,14 @@
 {
     "panels": [
-        {"id": 1, "title": "CPU Usage"},
-        {"id": 2, "title": "Memory Usage"}
+        {
+            "type": "gauge",
+            "title": "CPU Usage",
+            "options": {"min": 0, "max": 100}
+        },
+        {
+            "type": "stat",
+            "title": "Memory Usage",
+            "options": {}
+        }
     ]
 }
