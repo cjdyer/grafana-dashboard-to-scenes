@@ -8,6 +8,7 @@ import {
 } from '@grafana/schema';
 import {GaugePanelOptions} from './panels/gauge';
 import {StatPanelOptions} from './panels/stat';
+import {TablePanelOptions} from './panels/table';
 
 export const generateQuery = (target: Record<string, unknown>) =>
     JSON.stringify(target ?? {}, null, 2);
@@ -74,6 +75,18 @@ const generatePropertyOverride = (property: OverrideProperty) => {
     }
 };
 
+export const createEnumLookup = <T extends Record<string, string>>(
+    enumType: T
+): Record<T[keyof T], string> => {
+    return Object.values(enumType).reduce(
+        (lookup, value) => {
+            lookup[value as T[keyof T]] = `${enumType}.${value}`;
+            return lookup;
+        },
+        {} as Record<T[keyof T], string>
+    );
+};
+
 export interface OptionsString<T> {
     key: keyof T;
     value?: unknown;
@@ -82,11 +95,7 @@ export interface OptionsString<T> {
 export const generateSingleStateOptions = (
     options: SingleStatBaseOptions
 ): OptionsString<SingleStatBaseOptions>[] => {
-    const orientationMap: Record<VizOrientation, string> = {
-        [VizOrientation.Auto]: 'VizOrientation.Auto',
-        [VizOrientation.Horizontal]: 'VizOrientation.Horizontal',
-        [VizOrientation.Vertical]: 'VizOrientation.Vertical',
-    };
+    const orientationMap = createEnumLookup(VizOrientation);
 
     return [
         {
@@ -98,9 +107,9 @@ export const generateSingleStateOptions = (
     ];
 };
 
-export const generateGridItemCode = (
-    panel: Panel & {options?: GaugePanelOptions | StatPanelOptions},
-    optionsGenerator: (options?: GaugePanelOptions | StatPanelOptions) => string
+export const generateGridItemCode = <T = GaugePanelOptions | StatPanelOptions | TablePanelOptions>(
+    panel: Panel & {options?: T},
+    optionsGenerator: (options?: T) => string
 ) => {
     const {x, y, w, h} = panel.gridPos ?? {x: 0, y: 0, w: 10, h: 5};
 

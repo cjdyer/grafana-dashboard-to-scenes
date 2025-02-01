@@ -1,7 +1,6 @@
 import {BarGaugeSizing, SingleStatBaseOptions} from '@grafana/schema';
-import {generateSingleStateOptions, OptionsString} from '../utils';
+import {createEnumLookup, generateSingleStateOptions, OptionsString} from '../utils';
 
-// Hopefully Grafana exports this at some point
 export interface GaugePanelOptions extends SingleStatBaseOptions {
     minVizHeight?: number;
     minVizWidth?: number;
@@ -10,15 +9,12 @@ export interface GaugePanelOptions extends SingleStatBaseOptions {
     sizing?: BarGaugeSizing;
 }
 
+const barGaugeSizingMap = createEnumLookup(BarGaugeSizing);
+
 export const generateGaugeOptions = (options?: GaugePanelOptions) => {
     if (options === undefined) {
         return '';
     }
-
-    const sizingMap: Record<BarGaugeSizing, string> = {
-        [BarGaugeSizing.Auto]: 'BarGaugeSizing.Auto',
-        [BarGaugeSizing.Manual]: 'BarGaugeSizing.Manual',
-    };
 
     const baseOptions = generateSingleStateOptions(options);
     const panelOptions: OptionsString<GaugePanelOptions>[] = [
@@ -28,7 +24,7 @@ export const generateGaugeOptions = (options?: GaugePanelOptions) => {
         {key: 'showThresholdMarkers', value: options.showThresholdMarkers},
         {
             key: 'sizing',
-            value: options.sizing !== undefined ? sizingMap[options.sizing] : undefined,
+            value: options.sizing !== undefined ? barGaugeSizingMap[options.sizing] : undefined,
         },
     ];
 

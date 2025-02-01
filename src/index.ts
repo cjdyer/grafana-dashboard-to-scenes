@@ -3,6 +3,7 @@ import {Dashboard, Panel} from '@grafana/schema';
 import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
 import {generateStatOptions, StatPanelOptions} from './panels/stat';
+import {generateTableOptions, TablePanelOptions} from './panels/table';
 
 const imports = `import React from 'react';
 import {
@@ -36,6 +37,15 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
                             generateStatOptions
                         ),
                     };
+                case 'table':
+                    return {
+                        name: panel.title?.replace(/\s+/g, ''),
+                        code: generateGridItemCode(
+                            panel as Panel & {options?: TablePanelOptions},
+                            generateTableOptions
+                        ),
+                    };
+
                 default:
                     console.log(`Unsupported panel type: ${panel.type}`);
                     return {name: undefined, code: `// Unsupported panel type: ${panel.type}`};
