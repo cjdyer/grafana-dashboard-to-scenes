@@ -1,6 +1,7 @@
 import {readFileSync, writeFileSync} from 'fs';
-import {Dashboard} from '@grafana/schema';
-import {generateGauagePanel} from './panels/gauge';
+import {Dashboard, Panel} from '@grafana/schema';
+import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
+import {generateGridItemCode} from './utils';
 
 const imports = `import React from 'react';
 import {
@@ -16,18 +17,22 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
 
     const panelMap = dashboard
-        .panels!.map(panel => {
+        .panels!.map((panel: Panel) => {
             switch (panel.type) {
                 case 'gauge':
                     return {
                         name: panel.title?.replace(/\s+/g, ''),
-                        code: generateGauagePanel(panel),
+                        code: generateGridItemCode(
+                            panel as Panel & {options?: GaugePanelOptions},
+                            generateGaugeOptions
+                        ),
                     };
                 default:
-                    return {name: null, code: `// Unsupported panel type: ${panel.type}`};
+                    console.log(`Unsupported panel type: ${panel.type}`);
+                    return {name: undefined, code: `// Unsupported panel type: ${panel.type}`};
             }
         })
-        .filter(p => p.name !== null);
+        .filter(p => p.name !== undefined);
 
     const panelsCode = panelMap.map(p => p.code).join('\n\n');
 

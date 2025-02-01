@@ -18,7 +18,9 @@
     "type": "commonjs",
     "description": "",
     "devDependencies": {
+        "@grafana/data": "^11.5.0",
         "@grafana/scenes": "^5.41.1",
+        "@grafana/schema": "^11.5.0",
         "@types/node": "20.12.7",
         "@widesky/wsts": "^5.3.0",
         "ts-node": "^10.9.2",

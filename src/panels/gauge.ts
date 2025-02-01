@@ -1,39 +1,39 @@
-import {Panel} from '@grafana/schema';
-import {generateOverrides, generateQuery} from '../utils';
+import {BarGaugeSizing, SingleStatBaseOptions} from '@grafana/schema';
+import {generateSingleStateOptions, OptionsString} from '../utils';
 
-export const generateGauagePanel = (panel: Panel<Record<string, unknown>, {}>) => {
-    // Extract grid position
-    const {x, y, w, h} = panel.gridPos ?? {x: 0, y: 0, w: 10, h: 5};
+// Hopefully Grafana exports this at some point
+export interface GaugePanelOptions extends SingleStatBaseOptions {
+    minVizHeight?: number;
+    minVizWidth?: number;
+    showThresholdLabels?: boolean;
+    showThresholdMarkers?: boolean;
+    sizing?: BarGaugeSizing;
+}
 
-    // Convert fieldConfig overrides
-    const overrides = generateOverrides(panel.fieldConfig!.overrides);
+export const generateGaugeOptions = (options?: GaugePanelOptions) => {
+    if (options === undefined) {
+        return '';
+    }
 
-    // Convert panel queries
-    const queries = panel.targets?.map(generateQuery).join(',\n            ') || '';
+    const sizingMap: Record<BarGaugeSizing, string> = {
+        [BarGaugeSizing.Auto]: 'BarGaugeSizing.Auto',
+        [BarGaugeSizing.Manual]: 'BarGaugeSizing.Manual',
+    };
 
-    // Convert options into setOption calls
-    const options = Object.entries(panel.options ?? {})
-        .map(([key, value]) => `.setOption('${key}', ${JSON.stringify(value)})`)
+    const baseOptions = generateSingleStateOptions(options);
+    const panelOptions: OptionsString<GaugePanelOptions>[] = [
+        {key: 'minVizHeight', value: options.minVizHeight},
+        {key: 'minVizWidth', value: options.minVizWidth},
+        {key: 'showThresholdLabels', value: options.showThresholdLabels},
+        {key: 'showThresholdMarkers', value: options.showThresholdMarkers},
+        {
+            key: 'sizing',
+            value: options.sizing !== undefined ? sizingMap[options.sizing] : undefined,
+        },
+    ];
+
+    return [...baseOptions, ...panelOptions]
+        .filter(option => option.value !== undefined)
+        .map(({key, value}) => `.setOption('${key}', ${value})`)
         .join('\n    ');
-
-    return `const ${panel.title!.replace(/\s+/g, '')} = new SceneGridItem({
-x: ${x},
-y: ${y},
-width: ${w},
-height: ${h},
-body: PanelBuilders.gauge()
-.setTitle('${panel.title}')
-.setData(
-new SceneDataTransformer({
-$data: new SceneQueryRunner({
-  queries: [${queries}],
-  datasource: { uid: '${panel.datasource?.uid}', type: '${panel.datasource?.type}' }
-}),
-transformations: ${JSON.stringify(panel.transformations ?? [], null, 2)}
-})
-)
-${overrides}
-${options}
-.build(),
-});`;
 };
