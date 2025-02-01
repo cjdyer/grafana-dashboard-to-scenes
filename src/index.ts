@@ -1,39 +1,42 @@
 import {readFileSync, writeFileSync} from 'fs';
 
-interface Panel {
-    id: number;
-    title: string;
-}
+import {Dashboard} from '@grafana/schema';
 
-interface GrafanaDashboard {
-    panels: Panel[];
-}
+import {GenerateGauagePanel} from './panels/gauge';
 
 const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
-    const dashboard: GrafanaDashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+    const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
 
-    const panels = dashboard.panels.map(
-        panel =>
-            `new SceneFlexItem({
-    width: '50%',
-    height: 300,
-    body: PanelBuilders.text().setTitle('${panel.title}').setOption('content', '${panel.id}').build(),
-})`
-    );
+    const panels = dashboard.panels!.map(panel => {
+        switch (panel.type) {
+            case 'gauge':
+                return GenerateGauagePanel(panel);
+            default:
+                return `// Unsupported panel type: ${panel.type}`;
+        }
+    });
 
     const output = `import React from 'react';
-import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout } from '@grafana/scenes';
+import {
+    EmbeddedScene,
+    PanelBuilders,
+    SceneGridItem,
+    SceneDataTransformer,
+    SceneQueryRunner,
+    SceneGridLayout,
+} from '@grafana/scenes';
 
-export default function testDashboard() {
+export default function GeneratedDashboard() {
+  ${panels.join('\n\n')}
+
   const scene = new EmbeddedScene({
-    body: new SceneFlexLayout({
-      children: [${panels.join(',\n')}],
+  body: new SceneGridLayout({
+      children: [${dashboard.panels!.map(panel => panel.title?.replace(/\s+/g, '')).join(', ')}],
     }),
   });
 
   return <scene.Component model={scene} />;
-}
-`;
+}`;
 
     writeFileSync(outputTsxPath, output.trim());
     console.log(`Scene file generated: ${outputTsxPath}`);

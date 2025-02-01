@@ -6,6 +6,7 @@
         "lint": "wsts lint",
         "clean": "wsts clean",
         "compile": "tsc",
+        "generate:example": "ts-node src/index.ts example.json",
         "fix": "wsts fix",
         "prepare": "npm run compile",
         "pretest": "npm run compile",
