@@ -7,6 +7,7 @@
         "clean": "wsts clean",
         "compile": "tsc",
         "generate:example": "ts-node src/index.ts example.json",
+        "postgenerate:example": "wsts fix",
         "fix": "wsts fix",
         "prepare": "npm run compile",
         "pretest": "npm run compile",
