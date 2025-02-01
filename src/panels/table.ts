@@ -10,7 +10,7 @@ export interface TablePanelOptions {
     sortBy?: TableSortByFieldState[];
 }
 
-const tableCellHeightMap = createEnumLookup(TableCellHeight);
+const tableCellHeightMap = createEnumLookup('TableCellHeight', TableCellHeight);
 
 export const generateTableOptions = (options?: TablePanelOptions): string => {
     if (!options) {

@@ -9,7 +9,7 @@ export interface GaugePanelOptions extends SingleStatBaseOptions {
     sizing?: BarGaugeSizing;
 }
 
-const barGaugeSizingMap = createEnumLookup(BarGaugeSizing);
+const barGaugeSizingMap = createEnumLookup('BarGaugeSizing', BarGaugeSizing);
 
 export const generateGaugeOptions = (options?: GaugePanelOptions) => {
     if (options === undefined) {

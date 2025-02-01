@@ -18,11 +18,14 @@ export interface StatPanelOptions extends SingleStatBaseOptions {
     wideLayout?: boolean;
 }
 
-const bigValueColorModeMap = createEnumLookup(BigValueColorMode);
-const bigValueGraphModeMap = createEnumLookup(BigValueGraphMode);
-const bigValueJustifyModeMap = createEnumLookup(BigValueJustifyMode);
-const percentChangeColorModeMap = createEnumLookup(PercentChangeColorMode);
-const bigValueTextModeMap = createEnumLookup(BigValueTextMode);
+const bigValueColorModeMap = createEnumLookup('BigValueColorMode', BigValueColorMode);
+const bigValueGraphModeMap = createEnumLookup('BigValueGraphMode', BigValueGraphMode);
+const bigValueJustifyModeMap = createEnumLookup('BigValueJustifyMode', BigValueJustifyMode);
+const percentChangeColorModeMap = createEnumLookup(
+    'PercentChangeColorMode',
+    PercentChangeColorMode
+);
+const bigValueTextModeMap = createEnumLookup('BigValueTextMode', BigValueTextMode);
 
 export const generateStatOptions = (options?: StatPanelOptions) => {
     if (options === undefined) {

@@ -76,11 +76,12 @@ const generatePropertyOverride = (property: OverrideProperty) => {
 };
 
 export const createEnumLookup = <T extends Record<string, string>>(
+    enumName: string,
     enumType: T
 ): Record<T[keyof T], string> => {
     return Object.values(enumType).reduce(
         (lookup, value) => {
-            lookup[value as T[keyof T]] = `${enumType}.${value}`;
+            lookup[value as T[keyof T]] = `${enumName}.${value}`;
             return lookup;
         },
         {} as Record<T[keyof T], string>
@@ -95,7 +96,7 @@ export interface OptionsString<T> {
 export const generateSingleStateOptions = (
     options: SingleStatBaseOptions
 ): OptionsString<SingleStatBaseOptions>[] => {
-    const orientationMap = createEnumLookup(VizOrientation);
+    const orientationMap = createEnumLookup('VizOrientation', VizOrientation);
 
     return [
         {
