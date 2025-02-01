@@ -13,22 +13,20 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: GrafanaDashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
 
     const panels = dashboard.panels.map(
-        (panel, index) =>
-            `new SceneGridItem({
-    x: ${index},
-    y: 0,
-    body: PanelBuilders.gauge()
-        .setTitle('${panel.title}')
-        .build(),
-    })`
+        panel =>
+            `new SceneFlexItem({
+    width: '50%',
+    height: 300,
+    body: PanelBuilders.text().setTitle('${panel.title}').setOption('content', '${panel.id}').build(),
+})`
     );
 
     const output = `import React from 'react';
-import {EmbeddedScene, PanelBuilders, SceneGridItem, SceneGridLayout} from '@grafana/scenes';
+import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout } from '@grafana/scenes';
 
 export default function testDashboard() {
   const scene = new EmbeddedScene({
-    body: new SceneGridLayout({
+    body: new SceneFlexLayout({
       children: [${panels.join(',\n')}],
     }),
   });
