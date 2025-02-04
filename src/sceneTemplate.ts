@@ -13,6 +13,9 @@ import {
     BigValueGraphMode,
     BigValueJustifyMode,
     BigValueTextMode,
+    LegendDisplayMode,
+    SortOrder,
+    TooltipDisplayMode,
     VizOrientation,
 } from '@grafana/schema';
 

@@ -6,16 +6,19 @@ import {generateGridItemCode} from './utils';
 import {generateStatOptions, StatPanelOptions} from './panels/stat';
 import {generateTableOptions, TablePanelOptions} from './panels/table';
 import {sceneTemplate} from './sceneTemplate';
+import {generateTimeSeriesOptions, TimeseriesPanelOptions} from './panels/timeseries';
 
 const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
 
     const panelMap = dashboard
         .panels!.map((panel: Panel) => {
+            const name = panel.title?.replace(/\s+/g, '');
+
             switch (panel.type) {
                 case 'gauge':
                     return {
-                        name: panel.title?.replace(/\s+/g, ''),
+                        name,
                         code: generateGridItemCode(
                             panel as Panel & {options?: GaugePanelOptions},
                             generateGaugeOptions
@@ -23,7 +26,7 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
                     };
                 case 'stat':
                     return {
-                        name: panel.title?.replace(/\s+/g, ''),
+                        name,
                         code: generateGridItemCode(
                             panel as Panel & {options?: StatPanelOptions},
                             generateStatOptions
@@ -31,10 +34,19 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
                     };
                 case 'table':
                     return {
-                        name: panel.title?.replace(/\s+/g, ''),
+                        name,
                         code: generateGridItemCode(
                             panel as Panel & {options?: TablePanelOptions},
                             generateTableOptions
+                        ),
+                    };
+
+                case 'timeseries':
+                    return {
+                        name,
+                        code: generateGridItemCode(
+                            panel as Panel & {options?: TimeseriesPanelOptions},
+                            generateTimeSeriesOptions
                         ),
                     };
 

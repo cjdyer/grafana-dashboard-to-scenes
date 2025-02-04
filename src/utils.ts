@@ -81,14 +81,19 @@ const generatePropertyOverride = (property: OverrideProperty) => {
     }
 };
 
+const toPascalCase = (input: string) =>
+    input
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('');
+
 export const createEnumLookup = <T extends Record<string, string>>(
     enumName: string,
     enumType: T
 ): Record<T[keyof T], string> => {
     return Object.values(enumType).reduce(
         (lookup, value) => {
-            lookup[value as T[keyof T]] =
-                `${enumName}.${value.charAt(0).toUpperCase() + value.slice(1)}`;
+            lookup[value as T[keyof T]] = `${enumName}.${toPascalCase(value)}`;
             return lookup;
         },
         {} as Record<T[keyof T], string>
@@ -100,11 +105,11 @@ export interface OptionsString<T> {
     value?: unknown;
 }
 
+export const orientationMap = createEnumLookup('VizOrientation', VizOrientation);
+
 export const generateSingleStateOptions = (
     options: SingleStatBaseOptions
 ): OptionsString<SingleStatBaseOptions>[] => {
-    const orientationMap = createEnumLookup('VizOrientation', VizOrientation);
-
     return [
         {
             key: 'orientation',

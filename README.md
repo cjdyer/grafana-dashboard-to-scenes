@@ -7,7 +7,7 @@ dashboard JSON and maps them to corresponding React components.
 ## How It Works
 
 1. **Read Dashboard JSON**: The script reads a Grafana dashboard JSON file.
-2. **Parse Panels**: It identifies supported panel types (`gauge`, `stat`, `table`) and generates corresponding React components.
+2. **Parse Panels**: It identifies [supported panel types](#supported-panels) and generates corresponding React components.
 3. **Generate Scene Component**: It uses a template (`sceneTemplate.ts`) to structure the Scene.
 4. **Write Output**: The generated component is saved as `GeneratedScene.tsx` which can then be used
    in a Grafana Scenes app.
@@ -92,3 +92,4 @@ export default function GeneratedDashboard() {
 -   **Gauge Panel**
 -   **Stat Panel**
 -   **Table Panel**
+-   **Timeseries Panel**
