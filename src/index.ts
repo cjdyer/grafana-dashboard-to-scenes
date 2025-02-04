@@ -74,7 +74,11 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
         .replace('{{VARIABLES_CODE}}', variableMap.map(v => v.code).join('\n\n'))
         .replace('{{VARIABLE_NAMES}}', variableMap.map(v => v.name).join(', '))
         .replace('{{PANELS_CODE}}', panelMap.map(p => p.code).join('\n\n'))
-        .replace('{{PANEL_NAMES}}', panelMap.map(p => p.name).join(', '));
+        .replace('{{PANEL_NAMES}}', panelMap.map(p => p.name).join(', '))
+        .replace(
+            '{{TIME_RANGE}}',
+            dashboard.time ? JSON.stringify(dashboard.time) : '{ from: "now - 24h", to: "now"}'
+        );
 
     writeFileSync(outputTsxPath, componentCode.trim());
     console.log(`Scene file generated: ${outputTsxPath}`);

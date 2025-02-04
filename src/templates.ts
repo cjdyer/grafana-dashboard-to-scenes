@@ -9,6 +9,8 @@ import {
     SceneGridItem,
     SceneGridLayout,
     SceneQueryRunner,
+    SceneTimePicker,
+    SceneTimeRange,
     SceneVariableSet,
     VariableValueSelectors,
 } from '@grafana/scenes';
@@ -32,7 +34,8 @@ export default function GeneratedDashboard() {
     $variables: new SceneVariableSet({
       variables: [{{VARIABLE_NAMES}}],
     }),
-    controls: [new VariableValueSelectors( {} )],
+    $timeRange: new SceneTimeRange({{TIME_RANGE}}),
+    controls: [new VariableValueSelectors({}), new SceneTimePicker({hidePicker: false, isOnCanvas: true})],  
     body: new SceneGridLayout({
       children: [{{PANEL_NAMES}}],
     }),
