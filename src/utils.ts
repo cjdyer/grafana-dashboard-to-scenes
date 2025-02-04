@@ -115,8 +115,10 @@ export const generateSingleStateOptions = (
             key: 'orientation',
             value: orientationMap[options.orientation],
         },
+        //! TODO: Update these to correctly generate options, rather than using stringify
         {key: 'reduceOptions', value: JSON.stringify(options.reduceOptions)},
-        {key: 'text', value: options.text},
+        //! TODO: Update these to correctly generate options, rather than using stringify
+        {key: 'text', value: JSON.stringify(options.text)},
     ];
 };
 

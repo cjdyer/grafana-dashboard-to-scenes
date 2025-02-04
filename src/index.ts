@@ -1,12 +1,13 @@
 import {readFileSync, writeFileSync} from 'fs';
 // eslint-disable-next-line n/no-unpublished-import
-import {Dashboard, Panel} from '@grafana/schema';
+import {Dashboard, Panel, VariableModel} from '@grafana/schema';
 import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
 import {generateStatOptions, StatPanelOptions} from './panels/stat';
 import {generateTableOptions, TablePanelOptions} from './panels/table';
 import {sceneTemplate} from './sceneTemplate';
 import {generateTimeSeriesOptions, TimeseriesPanelOptions} from './panels/timeseries';
+import {generateVariableCode} from './variable';
 
 const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));
@@ -57,7 +58,21 @@ const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
         })
         .filter(p => p.name !== undefined);
 
+    const variableMap =
+        dashboard.templating?.list
+            ?.map((variable: VariableModel) => {
+                const name = `${variable.name}Variable`;
+
+                return {
+                    name,
+                    code: generateVariableCode(name, variable),
+                };
+            })
+            .filter(v => v.name !== undefined) ?? [];
+
     const componentCode = sceneTemplate
+        .replace('{{VARIABLES_CODE}}', variableMap.map(v => v.code).join('\n\n'))
+        .replace('{{VARIABLE_NAMES}}', variableMap.map(v => v.name).join(', '))
         .replace('{{PANELS_CODE}}', panelMap.map(p => p.code).join('\n\n'))
         .replace('{{PANEL_NAMES}}', panelMap.map(p => p.name).join(', '));
 
