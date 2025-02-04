@@ -1,4 +1,6 @@
 export const sceneTemplate = `
+/* eslint-disable @stylistic/max-len */
+// eslint-disable-next-line n/no-extraneous-import
 import React from 'react';
 import {
     CustomVariable,
@@ -35,7 +37,10 @@ export default function GeneratedDashboard() {
       variables: [{{VARIABLE_NAMES}}],
     }),
     $timeRange: new SceneTimeRange({{TIME_RANGE}}),
-    controls: [new VariableValueSelectors({}), new SceneTimePicker({hidePicker: false, isOnCanvas: true})],  
+    controls: [
+      new VariableValueSelectors({}), 
+      new SceneTimePicker({hidePicker: false, isOnCanvas: true})
+    ],  
     body: new SceneGridLayout({
       children: [{{PANEL_NAMES}}],
     }),
