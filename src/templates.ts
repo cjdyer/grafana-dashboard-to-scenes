@@ -64,7 +64,9 @@ export const queryVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVa
     sort: {{SORT}},
     isMulti: {{IS_MULTI}},
     includeAll: {{INCLUDE_ALL}},
-    options: {{OPTIONS}}
+    options: {{OPTIONS}},
+    hide: {{HIDE}},
+    value: '{{VALUE}}',
 });`;
 
 export const customVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new CustomVariable({
@@ -74,4 +76,6 @@ export const customVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new Custom
     isMulti: {{IS_MULTI}},
     includeAll: {{INCLUDE_ALL}},
     options: {{OPTIONS}},
+    hide: {{HIDE}},
+    value: '{{VALUE}}',
 });`;

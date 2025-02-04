@@ -28,7 +28,9 @@ export const generateVariableCode = (variableCodeName: string, template: Variabl
                         })) ?? []
                     )
                 )
-                .replace('{{INCLUDE_ALL}}', String(template.includeAll));
+                .replace('{{INCLUDE_ALL}}', String(template.includeAll))
+                .replace('{{HIDE}}', String(template.hide))
+                .replace('{{VALUE}}', String(template.current?.value));
         case 'custom':
             return customVariableTemplate
                 .replace('{{VARIABLE_CODE_NAME}}', variableCodeName)
@@ -49,7 +51,9 @@ export const generateVariableCode = (variableCodeName: string, template: Variabl
                         })) ?? []
                     )
                 )
-                .replace('{{INCLUDE_ALL}}', String(template.includeAll));
+                .replace('{{INCLUDE_ALL}}', String(template.includeAll))
+                .replace('{{HIDE}}', String(template.hide))
+                .replace('{{VALUE}}', String(template.current?.value));
         default:
             console.log(`Unsupported variable type: ${template.type}`);
             return '';
