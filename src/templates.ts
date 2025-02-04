@@ -40,3 +40,24 @@ export default function GeneratedDashboard() {
   return <scene.Component model={scene} />;
 }
 `;
+
+export const gridItemTemplate = `const {{PANEL_NAME}} = new SceneGridItem({
+    x: {{X}},
+    y: {{Y}},
+    width: {{WIDTH}},
+    height: {{HEIGHT}},
+    body: PanelBuilders.{{PANEL_TYPE}}()
+        .setTitle('{{PANEL_TITLE}}')
+        {{QUERY_SECTION}}{{OVERRIDES}}{{OPTIONS}}.build(),
+});`;
+
+export const variableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVariable({
+    name: '{{VARIABLE_NAME}}',
+    label: '{{LABEL}}',
+    datasource: { uid: '{{DATASOURCE_UID}}', type: '{{DATASOURCE_TYPE}}' },
+    query: \`{{QUERY}}\`,
+    refresh: {{REFRESH}},
+    sort: {{SORT}},
+    isMulti: {{IS_MULTI}},
+    includeAll: {{INCLUDE_ALL}}
+});`;

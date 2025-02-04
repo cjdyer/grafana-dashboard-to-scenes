@@ -10,7 +10,7 @@ import {
 import {GaugePanelOptions} from './panels/gauge';
 import {StatPanelOptions} from './panels/stat';
 import {TablePanelOptions} from './panels/table';
-import {gridItemTemplate} from './panelTemplate';
+import {gridItemTemplate} from './templates';
 
 export const generateQuery = (target: Record<string, unknown>) =>
     JSON.stringify(target ?? {}, null, 2);

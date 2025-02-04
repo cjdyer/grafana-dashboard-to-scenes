@@ -5,9 +5,9 @@ import {GaugePanelOptions, generateGaugeOptions} from './panels/gauge';
 import {generateGridItemCode} from './utils';
 import {generateStatOptions, StatPanelOptions} from './panels/stat';
 import {generateTableOptions, TablePanelOptions} from './panels/table';
-import {sceneTemplate} from './sceneTemplate';
 import {generateTimeSeriesOptions, TimeseriesPanelOptions} from './panels/timeseries';
 import {generateVariableCode} from './variable';
+import {sceneTemplate} from './templates';
 
 const migrateDashboard = (jsonPath: string, outputTsxPath: string) => {
     const dashboard: Dashboard = JSON.parse(readFileSync(jsonPath, 'utf-8'));

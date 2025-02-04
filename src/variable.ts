@@ -1,6 +1,6 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {VariableModel} from '@grafana/schema';
-import {variableTemplate} from './variableTemplate';
+import {variableTemplate} from './templates';
 
 export const generateVariableCode = (variableCodeName: string, template: VariableModel) => {
     const query =
