@@ -1,6 +1,7 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {TableCellHeight, TableFooterOptions, TableSortByFieldState} from '@grafana/schema';
-import {createEnumLookup, OptionsString} from '../utils';
+import {OptionsString} from '../utils';
+import {tableCellHeightMap} from '../enumLookUp';
 
 export interface TablePanelOptions {
     cellHeight?: TableCellHeight;
@@ -10,8 +11,6 @@ export interface TablePanelOptions {
     showTypeIcons?: boolean;
     sortBy?: TableSortByFieldState[];
 }
-
-const tableCellHeightMap = createEnumLookup('TableCellHeight', TableCellHeight);
 
 export const generateTableOptions = (options?: TablePanelOptions): string => {
     if (!options) {
@@ -41,7 +40,7 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
     };
 
     const generateSortByOptions = (sortBy?: TableSortByFieldState[]) => {
-        if (sortBy === undefined) {
+        if (sortBy === undefined || sortBy.length === 0) {
             return undefined;
         }
 
@@ -55,10 +54,7 @@ export const generateTableOptions = (options?: TablePanelOptions): string => {
     const tableOptions: OptionsString<TablePanelOptions>[] = [
         {
             key: 'cellHeight',
-            value:
-                options.cellHeight !== undefined
-                    ? tableCellHeightMap[options.cellHeight]
-                    : undefined,
+            value: tableCellHeightMap[options.cellHeight!],
         },
         {key: 'footer', value: generateFooterOptions(options.footer)},
         {key: 'frameIndex', value: options.frameIndex},

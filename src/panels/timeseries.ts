@@ -1,24 +1,23 @@
 import {
-    LegendDisplayMode,
     OptionsWithTimezones,
-    SortOrder,
-    TooltipDisplayMode,
     VizLegendOptions,
     VizOrientation,
     VizTooltipOptions,
     // eslint-disable-next-line n/no-unpublished-import
 } from '@grafana/schema';
-import {createEnumLookup, OptionsString, orientationMap} from '../utils';
+import {OptionsString} from '../utils';
+import {
+    legendDisplayModeMap,
+    orientationMap,
+    sortOrderMap,
+    tooltipDisplayModeMap,
+} from '../enumLookUp';
 
 export interface TimeseriesPanelOptions extends OptionsWithTimezones {
     legend?: VizLegendOptions;
     orientation?: VizOrientation;
     tooltip?: VizTooltipOptions;
 }
-
-const legendDisplayModeMap = createEnumLookup('LegendDisplayMode', LegendDisplayMode);
-const tooltipDisplayModeMap = createEnumLookup('TooltipDisplayMode', TooltipDisplayMode);
-const sortOrderMap = createEnumLookup('SortOrder', SortOrder);
 
 export const generateTimeSeriesOptions = (options?: TimeseriesPanelOptions): string => {
     if (!options) {
@@ -35,10 +34,7 @@ export const generateTimeSeriesOptions = (options?: TimeseriesPanelOptions): str
             {key: 'calcs', value: legend.calcs?.length !== 0 ? legend.calcs : undefined},
             {
                 key: 'displayMode',
-                value:
-                    legend.displayMode !== undefined
-                        ? legendDisplayModeMap[legend.displayMode]
-                        : undefined,
+                value: legendDisplayModeMap[legend.displayMode],
             },
             {key: 'isVisible', value: legend.isVisible},
             {
@@ -65,11 +61,11 @@ export const generateTimeSeriesOptions = (options?: TimeseriesPanelOptions): str
             {key: 'maxWidth', value: tooltip.maxWidth},
             {
                 key: 'mode',
-                value: tooltip.mode !== undefined ? tooltipDisplayModeMap[tooltip.mode] : undefined,
+                value: tooltipDisplayModeMap[tooltip.mode!],
             },
             {
                 key: 'sort',
-                value: tooltip.sort !== undefined ? sortOrderMap[tooltip.sort] : undefined,
+                value: sortOrderMap[tooltip.sort!],
             },
         ].filter(option => option.value !== undefined);
 
@@ -88,8 +84,7 @@ export const generateTimeSeriesOptions = (options?: TimeseriesPanelOptions): str
         {key: 'legend', value: generateLegendOptions(options.legend)},
         {
             key: 'orientation',
-            value:
-                options.orientation !== undefined ? orientationMap[options.orientation] : undefined,
+            value: orientationMap[options.orientation!],
         },
         {key: 'tooltip', value: generateTooltipOptions(options.tooltip)},
         {key: 'timezone', value: generateTimezoneOptions(options.timezone)},

@@ -1,6 +1,7 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {BarGaugeSizing, SingleStatBaseOptions} from '@grafana/schema';
-import {createEnumLookup, generateSingleStateOptions, OptionsString} from '../utils';
+import {generateSingleStateOptions, OptionsString} from '../utils';
+import {barGaugeSizingMap} from '../enumLookUp';
 
 export interface GaugePanelOptions extends SingleStatBaseOptions {
     minVizHeight?: number;
@@ -9,8 +10,6 @@ export interface GaugePanelOptions extends SingleStatBaseOptions {
     showThresholdMarkers?: boolean;
     sizing?: BarGaugeSizing;
 }
-
-const barGaugeSizingMap = createEnumLookup('BarGaugeSizing', BarGaugeSizing);
 
 export const generateGaugeOptions = (options?: GaugePanelOptions) => {
     if (options === undefined) {

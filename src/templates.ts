@@ -59,7 +59,7 @@ export const queryVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVa
     name: '{{VARIABLE_NAME}}',
     label: '{{LABEL}}',
     datasource: { uid: '{{DATASOURCE_UID}}', type: '{{DATASOURCE_TYPE}}' },
-    query: \`{{QUERY}}\`,
+    query: "{{QUERY}}",
     refresh: {{REFRESH}},
     sort: {{SORT}},
     isMulti: {{IS_MULTI}},
@@ -72,7 +72,7 @@ export const queryVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVa
 export const customVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new CustomVariable({
     name: '{{VARIABLE_NAME}}',
     label: '{{LABEL}}',
-    query: \`{{QUERY}}\`,
+    query: "{{QUERY}}",
     isMulti: {{IS_MULTI}},
     includeAll: {{INCLUDE_ALL}},
     options: {{OPTIONS}},

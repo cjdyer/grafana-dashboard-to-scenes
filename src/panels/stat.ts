@@ -7,7 +7,14 @@ import {
     SingleStatBaseOptions,
     // eslint-disable-next-line n/no-unpublished-import
 } from '@grafana/schema';
-import {createEnumLookup, generateSingleStateOptions, OptionsString} from '../utils';
+import {generateSingleStateOptions, OptionsString} from '../utils';
+import {
+    bigValueColorModeMap,
+    bigValueGraphModeMap,
+    bigValueJustifyModeMap,
+    bigValueTextModeMap,
+    percentChangeColorModeMap,
+} from '../enumLookUp';
 
 export interface StatPanelOptions extends SingleStatBaseOptions {
     colorMode?: BigValueColorMode;
@@ -19,15 +26,6 @@ export interface StatPanelOptions extends SingleStatBaseOptions {
     wideLayout?: boolean;
 }
 
-const bigValueColorModeMap = createEnumLookup('BigValueColorMode', BigValueColorMode);
-const bigValueGraphModeMap = createEnumLookup('BigValueGraphMode', BigValueGraphMode);
-const bigValueJustifyModeMap = createEnumLookup('BigValueJustifyMode', BigValueJustifyMode);
-const percentChangeColorModeMap = createEnumLookup(
-    'PercentChangeColorMode',
-    PercentChangeColorMode
-);
-const bigValueTextModeMap = createEnumLookup('BigValueTextMode', BigValueTextMode);
-
 export const generateStatOptions = (options?: StatPanelOptions) => {
     if (options === undefined) {
         return '';
@@ -37,37 +35,24 @@ export const generateStatOptions = (options?: StatPanelOptions) => {
     const panelOptions: OptionsString<StatPanelOptions>[] = [
         {
             key: 'colorMode',
-            value:
-                options.colorMode !== undefined
-                    ? bigValueColorModeMap[options.colorMode]
-                    : undefined,
+            value: bigValueColorModeMap[options.colorMode!],
         },
         {
             key: 'graphMode',
-            value:
-                options.graphMode !== undefined
-                    ? bigValueGraphModeMap[options.graphMode]
-                    : undefined,
+            value: bigValueGraphModeMap[options.graphMode!],
         },
         {
             key: 'justifyMode',
-            value:
-                options.justifyMode !== undefined
-                    ? bigValueJustifyModeMap[options.justifyMode]
-                    : undefined,
+            value: bigValueJustifyModeMap[options.justifyMode!],
         },
         {
             key: 'percentChangeColorMode',
-            value:
-                options.percentChangeColorMode !== undefined
-                    ? percentChangeColorModeMap[options.percentChangeColorMode]
-                    : undefined,
+            value: percentChangeColorModeMap[options.percentChangeColorMode!],
         },
         {key: 'showPercentChange', value: options.showPercentChange},
         {
             key: 'textMode',
-            value:
-                options.textMode !== undefined ? bigValueTextModeMap[options.textMode] : undefined,
+            value: bigValueTextModeMap[options.textMode!],
         },
         {key: 'wideLayout', value: options.wideLayout},
     ];

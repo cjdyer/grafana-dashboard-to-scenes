@@ -4,13 +4,13 @@ import {
     MatcherConfig,
     Panel,
     SingleStatBaseOptions,
-    VizOrientation,
     // eslint-disable-next-line n/no-unpublished-import
 } from '@grafana/schema';
 import {GaugePanelOptions} from './panels/gauge';
 import {StatPanelOptions} from './panels/stat';
 import {TablePanelOptions} from './panels/table';
 import {gridItemTemplate} from './templates';
+import {orientationMap} from './enumLookUp';
 
 export const generateQuery = (target: Record<string, unknown>) =>
     JSON.stringify(target ?? {}, null, 2);
@@ -81,31 +81,10 @@ const generatePropertyOverride = (property: OverrideProperty) => {
     }
 };
 
-const toPascalCase = (input: string) =>
-    input
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join('');
-
-export const createEnumLookup = <T extends Record<string, string>>(
-    enumName: string,
-    enumType: T
-): Record<T[keyof T], string> => {
-    return Object.values(enumType).reduce(
-        (lookup, value) => {
-            lookup[value as T[keyof T]] = `${enumName}.${toPascalCase(value)}`;
-            return lookup;
-        },
-        {} as Record<T[keyof T], string>
-    );
-};
-
 export interface OptionsString<T> {
     key: keyof T;
     value?: unknown;
 }
-
-export const orientationMap = createEnumLookup('VizOrientation', VizOrientation);
 
 export const generateSingleStateOptions = (
     options: SingleStatBaseOptions
