@@ -1,6 +1,7 @@
 export const sceneTemplate = `
 import React from 'react';
 import {
+    CustomVariable,
     EmbeddedScene,
     PanelBuilders,
     QueryVariable,
@@ -51,7 +52,7 @@ export const gridItemTemplate = `const {{PANEL_NAME}} = new SceneGridItem({
         {{QUERY_SECTION}}{{OVERRIDES}}{{OPTIONS}}.build(),
 });`;
 
-export const variableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVariable({
+export const queryVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVariable({
     name: '{{VARIABLE_NAME}}',
     label: '{{LABEL}}',
     datasource: { uid: '{{DATASOURCE_UID}}', type: '{{DATASOURCE_TYPE}}' },
@@ -59,5 +60,15 @@ export const variableTemplate = `const {{VARIABLE_CODE_NAME}} = new QueryVariabl
     refresh: {{REFRESH}},
     sort: {{SORT}},
     isMulti: {{IS_MULTI}},
-    includeAll: {{INCLUDE_ALL}}
+    includeAll: {{INCLUDE_ALL}},
+    options: {{OPTIONS}}
+});`;
+
+export const customVariableTemplate = `const {{VARIABLE_CODE_NAME}} = new CustomVariable({
+    name: '{{VARIABLE_NAME}}',
+    label: '{{LABEL}}',
+    query: \`{{QUERY}}\`,
+    isMulti: {{IS_MULTI}},
+    includeAll: {{INCLUDE_ALL}},
+    options: {{OPTIONS}},
 });`;

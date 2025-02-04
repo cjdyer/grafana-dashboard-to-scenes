@@ -1,21 +1,57 @@
 // eslint-disable-next-line n/no-unpublished-import
 import {VariableModel} from '@grafana/schema';
-import {variableTemplate} from './templates';
+import {customVariableTemplate, queryVariableTemplate} from './templates';
 
 export const generateVariableCode = (variableCodeName: string, template: VariableModel) => {
     const query =
         (typeof template.query === 'string' ? template.query : JSON.stringify(template.query)) ??
         '';
 
-    return variableTemplate
-        .replace('{{VARIABLE_CODE_NAME}}', variableCodeName)
-        .replace('{{VARIABLE_NAME}}', template.name)
-        .replace('{{LABEL}}', template.label ?? '')
-        .replace('{{DATASOURCE_UID}}', template.datasource?.uid ?? '')
-        .replace('{{DATASOURCE_TYPE}}', template.datasource?.type ?? '')
-        .replace('{{QUERY}}', query)
-        .replace('{{REFRESH}}', String(template.refresh))
-        .replace('{{SORT}}', String(template.sort))
-        .replace('{{IS_MULTI}}', String(template.multi))
-        .replace('{{INCLUDE_ALL}}', String(template.includeAll));
+    switch (template.type) {
+        case 'query':
+            return queryVariableTemplate
+                .replace('{{VARIABLE_CODE_NAME}}', variableCodeName)
+                .replace('{{VARIABLE_NAME}}', template.name)
+                .replace('{{LABEL}}', template.label ?? '')
+                .replace('{{DATASOURCE_UID}}', template.datasource?.uid ?? '')
+                .replace('{{DATASOURCE_TYPE}}', template.datasource?.type ?? '')
+                .replace('{{QUERY}}', query)
+                .replace('{{REFRESH}}', String(template.refresh))
+                .replace('{{SORT}}', String(template.sort))
+                .replace('{{IS_MULTI}}', String(template.multi))
+                .replace(
+                    '{{OPTIONS}}',
+                    JSON.stringify(
+                        template.options?.map(option => ({
+                            label: option.text,
+                            value: option.value,
+                        })) ?? []
+                    )
+                )
+                .replace('{{INCLUDE_ALL}}', String(template.includeAll));
+        case 'custom':
+            return customVariableTemplate
+                .replace('{{VARIABLE_CODE_NAME}}', variableCodeName)
+                .replace('{{VARIABLE_NAME}}', template.name)
+                .replace('{{LABEL}}', template.label ?? '')
+                .replace('{{DATASOURCE_UID}}', template.datasource?.uid ?? '')
+                .replace('{{DATASOURCE_TYPE}}', template.datasource?.type ?? '')
+                .replace('{{QUERY}}', query)
+                .replace('{{REFRESH}}', String(template.refresh))
+                .replace('{{SORT}}', String(template.sort))
+                .replace('{{IS_MULTI}}', String(template.multi))
+                .replace(
+                    '{{OPTIONS}}',
+                    JSON.stringify(
+                        template.options?.map(option => ({
+                            label: option.text,
+                            value: option.value,
+                        })) ?? []
+                    )
+                )
+                .replace('{{INCLUDE_ALL}}', String(template.includeAll));
+        default:
+            console.log(`Unsupported variable type: ${template.type}`);
+            return '';
+    }
 };
